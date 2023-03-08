@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0;net7.0</TargetFrameworks>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <DebugType>embedded</DebugType>
+
+    <!-- Package properties -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>PW.DataContract.SystemTextJson</PackageId>
+    <Version>1.0.0-preview.1</Version>
+    <Authors>Sylvain Bruyère</Authors>
+    <Company>Paul Wurth S.A.</Company>
+    <Description>Provides support for System.Runtime.Serialization attributes (DataContract, DataMember and IgnoreDataMember) to System.Text.Json.</Description>
+    <Copyright>Copyright © Paul Wurth S.A. $([System.DateTime]::UtcNow.ToString("yyyy"))</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/paul-wurth/PW.DataContract.SystemTextJson</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/blob/main/README.md</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+    <!-- Build metadata -->
+    <SourceRevisionId Condition="'$(CIBuildId)' == ''">dev.$([System.Environment]::UserName).$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssK"))</SourceRevisionId>
+    <SourceRevisionId Condition="'$(CIBuildId)' != ''">ci.$(CIBuildId)</SourceRevisionId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
