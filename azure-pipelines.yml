@@ -1,0 +1,46 @@
+# Continuous Integration (CI) and Continuous Delivery (CD) for PW.DataContract.SystemTextJson
+
+# Triggered when pushing to the "main" branch
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+  paths:
+    exclude:
+    - .gitattributes
+    - .gitignore
+    - LICENSE
+    - README.md
+
+# Use templates from the Utilities/PipelinesTemplates repository
+resources:
+  repositories:
+  - repository: PipelinesTemplates
+    type: git
+    name: Utilities/PipelinesTemplates
+
+# Pipeline name
+name: PW.DataContract.SystemTextJson.$(Build.BuildId)
+
+stages:
+- stage: Build
+  jobs:
+  - template: /DotNet/Build+Test.yml@PipelinesTemplates
+    parameters:
+      projectTitle: PW.DataContract.SystemTextJson
+      libraryProjects: |
+        **/PW.DataContract.SystemTextJson/*.csproj
+      testProjects: |
+        **/*Tests/*.csproj
+
+# Only publish package(s) from the main, master or a release branch
+- ${{ if or(in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')) }}:
+  - stage: Publish
+    jobs:
+    - template: /DotNet/PublishNuGet.yml@PipelinesTemplates
+      parameters:
+        projectTitle: PW.DataContract.SystemTextJson
+        environment: Publish-PW_DataContract_SystemTextJson-Env
+        packagesToPublish: |
+          **/PW.DataContract.SystemTextJson.*.nupkg
